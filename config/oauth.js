@@ -63,7 +63,7 @@
 // export default passport;
 import passport from "passport";
 import GoogleStrategy from "passport-google-oauth20";
-import AppleStrategy from "passport-apple";
+import GitHubStrategy from "passport-github2";
 
 passport.use(
   new GoogleStrategy(
@@ -79,13 +79,11 @@ passport.use(
 );
 
 passport.use(
-  new AppleStrategy(
+  new GitHubStrategy(
     {
-      clientID: process.env.APPLE_CLIENT_ID,
-      teamID: process.env.APPLE_TEAM_ID,
-      keyID: process.env.APPLE_KEY_ID,
-      callbackURL: "/api/auth/apple/callback",
-      privateKey: process.env.APPLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: "/api/auth/github/callback",
     },
     (accessToken, refreshToken, profile, done) => {
       done(null, profile);
