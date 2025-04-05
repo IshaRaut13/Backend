@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: url('user login page bg2.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .logo-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+
+        .logo {
+            height: 100px;
+            width: auto;
+        }
+
+        .container {
+            background: rgb(231, 229, 229);
+            height: auto;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            width: 750px;
+            position: relative;
+            border: 2px solid rgb(241, 236, 236);
+        }
+        
+        .border-box {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border-radius: 15px;
+            border: 2.5px solid rgba(0, 0, 0, 0.582); /* Semi-transparent border */
+            pointer-events: none; /* Ensure it doesn't interfere with interactions */
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+            font-weight: bold;
+            font-size: 45px;
+        }
+        
+        .header img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            cursor: pointer;
+            object-fit: cover;
+        }
+        
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            align-items: flex-start; /* Ensure elements align at the top */
+            gap: 15px;
+        }
+        
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            width: 48%;
+            align-items: flex-start; /* Ensure the label text aligns to the left */
+        }
+        
+        .input-container label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-align: left;
+            width: 100%; /* Ensure it takes the full width */
+        }
+        
+        .input-container input {
+            width: 330px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: lightgray;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .submit-btn {
+            padding: 10px 20px;
+            background: #3b3e42;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #d64040;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .dashboard-btn {
+            padding: 10px 20px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        #file-input {
+            display: none;
+        }
+        .name-input {
+            color: #000000;
+            font-weight: bold;
+            font-size: 35px;
+            border: none;
+            background: transparent;
+            text-align: center;
+            outline: none;
+        }
+
+        .error-message {
+            color: #d64040;
+            background-color: #ffeeee;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #d64040;
+            font-weight: bold;
+            display: none;
+        }
+
+        .success-message {
+            color: #4caf50;
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #4caf50;
+            font-weight: bold;
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: #555;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <img src="images/VJ_logo.png" alt="Logo" class="logo">
+    </div>
+    
+    <div class="container">
+        <div class="border-box"></div> <!-- Inner Transparent Border -->
+        
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        <div id="loadingIndicator" class="loading">Loading profile data...</div>
+        
+        <div class="header">
+            <label for="file-input">
+                <img src="images/user-icon.jpeg" alt="User Icon" id="user-img">
+            </label>
+            <input type="file" id="file-input" accept="image/*" onchange="previewImage(event)">
+            <input type="text" id="name-input" placeholder="Enter Your Name" class="name-input" required readonly>
+        </div>
+        
+        <form id="info-form">
+            <div class="form-group">
+                <div class="input-container">
+                    <label>Company Name</label>
+                    <input type="text" id="company-input" placeholder="Enter your Company Name" required readonly>
+                </div>
+                <div class="input-container">
+                    <label>Email ID</label>
+                    <input type="email" id="email-input" placeholder="Enter your valid Email ID" required readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-container">
+                    <label>Address</label>
+                    <input type="text" id="address-input" placeholder="Enter your Address" required readonly>
+                </div>
+                <div class="input-container">
+                    <label>Contact Number</label>
+                    <input type="text" id="phone-input" placeholder="Enter your Valid Contact Number" required readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-container">
+                    <label>Location</label>
+                    <input type="text" id="location-input" placeholder="Enter your Location" required readonly>
+                </div>
+                <div class="input-container">
+                    <label>Gender</label>
+                    <input type="text" id="gender-input" placeholder="Enter your Gender" readonly>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <button type="button" class="submit-btn" id="edit-btn" onclick="toggleEdit()">Edit Profile</button>
+                <button type="button" class="logout-btn" id="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Check if user is authenticated
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth()) {
+                return;
+            }
+            
+            // Load user profile data
+            loadUserProfile();
+        });
+        
+        // Load user profile data from the server
+        async function loadUserProfile() {
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            try {
+                // Show loading indicator
+                errorMessage.style.display = "none";
+                successMessage.style.display = "none";
+                loadingIndicator.style.display = "block";
+                
+                // Get user profile data
+                const userData = await getUserProfile();
+                
+                // Hide loading indicator
+                loadingIndicator.style.display = "none";
+                
+                if (userData) {
+                    // Fill the form with user data
+                    document.getElementById('name-input').value = userData.name || '';
+                    document.getElementById('company-input').value = userData.company || '';
+                    document.getElementById('email-input').value = userData.email || '';
+                    document.getElementById('address-input').value = userData.address || '';
+                    document.getElementById('phone-input').value = userData.phone || '';
+                    document.getElementById('location-input').value = userData.location || '';
+                    document.getElementById('gender-input').value = userData.gender || '';
+                    
+                    // Set user image if available
+                    if (userData.profileImage) {
+                        document.getElementById('user-img').src = userData.profileImage;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+                loadingIndicator.style.display = "none";
+                errorMessage.style.display = "block";
+                errorMessage.textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        // Preview selected image
+        function previewImage(event) {
+            const reader = new FileReader();
+            window.selectedFile = event.target.files[0];
+            
+            reader.onload = function () {
+                document.getElementById('user-img').src = reader.result;
+            }
+            reader.readAsDataURL(window.selectedFile);
+        }
+        
+        // Toggle form fields edit mode
+        function toggleEdit() {
+            const editButton = document.getElementById("edit-btn");
+            const emailInput = document.getElementById("email-input"); // Email should remain readonly
+            
+            if (editButton.textContent === "Edit Profile") {
+                // Enable editing of form fields
+                const formInputs = document.querySelectorAll("#info-form input:not(#email-input)");
+                formInputs.forEach(input => input.removeAttribute("readonly"));
+                
+                editButton.textContent = "Save Profile";
+            } else {
+                // Save the form data
+                saveProfile();
+            }
+        }
+        
+        // Save user profile data to the server
+        async function saveProfile() {
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const editButton = document.getElementById("edit-btn");
+            
+            try {
+                // Get form values
+                const name = document.getElementById('name-input').value;
+                const company = document.getElementById('company-input').value;
+                const address = document.getElementById('address-input').value;
+                const phone = document.getElementById('phone-input').value;
+                const location = document.getElementById('location-input').value;
+                const gender = document.getElementById('gender-input').value;
+                
+                // Validate required fields
+                if (!name || !company || !address || !phone || !location) {
+                    throw new Error('Please fill in all required fields');
+                }
+                
+                // Show loading indicator
+                errorMessage.style.display = "none";
+                successMessage.style.display = "none";
+                loadingIndicator.style.display = "block";
+                
+                // Create profile data object
+                const profileData = {
+                    name,
+                    company,
+                    address,
+                    phone,
+                    location,
+                    gender
+                };
+                
+                // Add image if a new one was selected
+                if (window.selectedFile) {
+                    profileData.profileImage = window.selectedFile;
+                }
+                
+                // Update profile
+                const success = await updateUserProfile(profileData);
+                
+                // Hide loading indicator
+                loadingIndicator.style.display = "none";
+                
+                if (success) {
+                    // Disable editing of form fields
+                    const formInputs = document.querySelectorAll("#info-form input");
+                    formInputs.forEach(input => input.setAttribute("readonly", true));
+                    
+                    // Update button text
+                    editButton.textContent = "Edit Profile";
+                    
+                    // Show success message
+                    successMessage.style.display = "block";
+                    successMessage.textContent = "Profile updated successfully! Redirecting to homepage...";
+                    
+                    // Navigate to homepage after successful profile update
+                    setTimeout(() => {
+                        window.location.href = '/Homepage.html';
+                    }, 2000);
+                } else {
+                    throw new Error('Failed to update profile');
+                }
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                loadingIndicator.style.display = "none";
+                errorMessage.style.display = "block";
+                errorMessage.textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        // Navigate to dashboard - This is no longer needed
+        function goToDashboard() {
+            window.location.href = '/dashboard';
+        }
+    </script>
+</body>
+</html>

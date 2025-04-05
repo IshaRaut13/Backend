@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddSolutions</title>
+    <style>
+
+        html,body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; 
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #d9d9d9;
+            padding: 10px 40px;
+        }
+        .logo {
+            height: 100px;
+            width: auto;
+        }
+        .buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .admin-name {
+            font-size: 23px;
+            font-weight: bold;
+            background-color: #ffffff;
+            padding: 5px 7px;
+            border-radius: 5px;
+        }
+        .logout-btn {
+            background-color: #333;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 23px;
+        }
+        .logout-btn:hover{
+            background: #d64040;
+        }
+        .container {
+            display: flex;
+            flex-grow: 1;
+            height: calc(100vh - 110px); /* reduced to avoid scrollbar */
+            align-items: stretch;
+        }
+        .sidebar {
+            width: 260px;
+            background-color: #e6e6e6;
+            padding:0 20px;
+            border-right: 2px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .menu-item {
+            margin-bottom: 15px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 13px;
+            background: #555;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 28px;
+            text-align: left;
+        }
+        .menu-item:hover {
+            background: #777;
+        }
+        .menu-item.active {
+            background: #1c1c1c;;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            background: linear-gradient(to right, #ccc, #f5f5f5);
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: auto;
+            margin: 10px;
+        }
+
+        
+
+        .solution-box {
+            background: #6e6e6e;
+            padding: 25px;
+            border-radius: 30px;
+            width: 1100px;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            color: white; 
+        }
+
+        .upload-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .upload-box {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px dashed #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .upload-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: none;
+        }
+
+
+        .upload-box::after {
+            content: "+";
+            font-size: 30px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .upload-box.active::after {
+            display: none;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+
+        .input-group input, 
+        .input-group textarea {
+            width: 95%;  
+            padding: 12px; 
+            font-size: 18px; 
+            border: 1px solid #ccc;
+            margin-top: 5px;
+            background-color: lightgray;
+            font-family:Georgia, 'Times New Roman', Times, serif
+        }
+
+        .input-group textarea {
+            height: 140px;  
+            resize: none;  
+        }
+
+
+        .content-container {
+            display: flex;
+            gap: 40px;
+        }
+        
+        .left-section, 
+        .right-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .add-btn {
+            display: block;
+            width: 15%;
+            margin: 20px auto 0; /* reduced margin */
+            padding: 12px;
+            font-size: 26px;
+            font-weight: bold;
+            background: white;
+            color: black;
+            border: none;
+            border-radius: 13px;
+            cursor: pointer;
+        }
+        .add-btn:hover {
+            background: lightgrey;
+        }   
+        .error-message {
+            color: #d64040;
+            background-color: #ffeeee;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #d64040;
+            font-weight: bold;
+            display: none;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                padding: 10px;
+            }
+            .menu-item {
+                flex: 1 1 45%;
+                text-align: center;
+            }
+            .content-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <img src="VJ_logo-removebg-preview.png" alt="Logo" class="logo">
+        <div class="buttons">
+            <span class="admin-name" id="adminName">Admin</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <div class="menu-item" onclick="window.location.href='/admin/dashboard'">🏠 Dashboard</div>
+            <div class="menu-item" onclick="window.location.href='/admin/userdetails'">📅 User Details</div>
+            <div class="menu-item active" onclick="window.location.href='/admin/addsolutions'" >➕ Add Solutions</div>
+            <div class="menu-item" onclick="window.location.href='/admin/solutionlist'">📋 List</div>
+            <div class="menu-item">📊 Ratings</div>
+        </div>
+        <div class="content">
+            <div class="solution-box">
+                <div id="errorMessage" class="error-message"></div>
+                <div id="loadingIndicator" class="loading" style="display: none;">Processing...</div>
+                <div class="upload-container" style="justify-content: left;">
+                    <label for="file-input">
+                        <div class="upload-box" id="uploadBox">
+                            <img id="previewImage" src="" alt="Uploaded Image">
+                        </div>
+                    </label>
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                    <h1 style="margin-left: 30px;">Upload Automation Photo</h1>
+                </div>
+
+                <div class="content-container">
+                    <div class="left-section">
+                        <div class="input-group">
+                            <label for="title-input">Name</label>
+                            <input type="text" id="title-input" placeholder="Turns key Solutions ">
+                        </div>
+                        <div class="input-group">
+                            <label for="description-input">Description</label>
+                            <textarea id="description-input" placeholder="A turnkey solution is a fully operational, ready-to-use system."></textarea>
+                        </div>
+                    </div>
+                    <div class="right-section"> 
+                        <div class="input-group">
+                            <label for="implementation-input">Details</label>
+                            <textarea id="implementation-input" placeholder="A turnkey solution is a ready-to-use system.
+                            - Minimal setup required.
+                            - Fully operational upon delivery.
+                            - Includes design, development & deployment."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button class="add-btn" id="add-solution-btn">Add Solution</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Check admin authentication
+            if (!checkAdminAuth()) {
+                return;
+            }
+            
+            // Display admin name
+            try {
+                const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{"name":"Admin"}');
+                document.getElementById('adminName').textContent = adminUser.name || 'Admin';
+            } catch (e) {
+                console.error('Error parsing admin user data:', e);
+                document.getElementById('adminName').textContent = 'Admin';
+            }
+            
+            // Handle file upload preview
+            const fileInput = document.getElementById('file-input');
+            const uploadBox = document.getElementById('uploadBox');
+            const previewImage = document.getElementById('previewImage');
+            
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        previewImage.src = event.target.result;
+                        previewImage.style.display = 'block';
+                        uploadBox.classList.add('active');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Add event listener to the add solution button
+            document.getElementById('add-solution-btn').addEventListener('click', handleAddSolution);
+        });
+        
+        // Handle add solution button click
+        async function handleAddSolution() {
+            const errorMessage = document.getElementById('errorMessage');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            try {
+                errorMessage.style.display = "none";
+                loadingIndicator.style.display = "block";
+                
+                const title = document.getElementById('title-input').value;
+                const description = document.getElementById('description-input').value;
+                const implementation = document.getElementById('implementation-input').value;
+                
+                if (!title || !description) {
+                    throw new Error('Please fill in all required fields');
+                }
+                
+                // Validate authentication token
+                const adminToken = localStorage.getItem('adminToken');
+                if (!adminToken) {
+                    throw new Error('Admin token not found. Please login again.');
+                }
+                
+                // Get admin information
+                const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
+                console.log('Admin user data:', adminUser); // For debugging
+                
+                // For backward compatibility, check both id and _id
+                const adminId = adminUser.id || adminUser._id;
+                if (!adminId) {
+                    throw new Error('Admin authentication required');
+                }
+                
+                // Create solution data
+                const solutionData = {
+                    title: title,
+                    solutionText: description,      
+                    implementation: implementation,
+                    createdBy: adminId,
+                    documents: [] // For future file upload implementation
+                };
+                
+                console.log('Submitting solution data:', solutionData);
+                
+                // Submit to backend
+                const success = await addSolution(solutionData);
+                
+                if (success) {
+                    loadingIndicator.style.display = "none";
+                    alert('Solution added successfully! It will now appear in the solutions list and user interface.');
+                    
+                    // Clear form
+                    document.getElementById('title-input').value = '';
+                    document.getElementById('description-input').value = '';
+                    document.getElementById('implementation-input').value = '';
+                    document.getElementById('previewImage').style.display = 'none';
+                    document.getElementById('uploadBox').classList.remove('active');
+                }
+             } catch (error) {
+                console.error('Error adding solution:', error);
+                loadingIndicator.style.display = "none";
+                errorMessage.style.display = "block";
+                errorMessage.textContent = `Error: ${error.message}`;
+                
+                // If token expired, redirect to login
+                if (error.message.includes('expired') || error.message.includes('authentication')) {
+                    setTimeout(() => {
+                        window.location.href = '/admin/login';
+                    }, 2000);
+                }
+             }
+        }
+    </script>
+</body>
+</html>
+

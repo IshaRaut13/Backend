@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions - VJ Automations</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background: url('/images/User Background.jpeg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .nav-link:hover {
+            background-color: lightgrey;
+            color: black;
+        }
+
+        .nav-link.active {
+            background-color: grey;
+            color: black;
+        }
+
+        .nav-link {
+            font-weight: bold;
+        }
+
+        .solutions-container {
+            padding: 50px 0;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+            font-weight: bold;
+            font-size: 42px;
+        }
+
+        .solution-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .solution-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .solution-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .solution-text {
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .solution-date {
+            font-size: 14px;
+            color: #666;
+            text-align: right;
+        }
+
+        .view-details-btn {
+            background-color: #ffc107;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .view-details-btn:hover {
+            background-color: #e0a800;
+        }
+
+        .no-solutions {
+            text-align: center;
+            padding: 50px;
+            font-size: 20px;
+            color: #555;
+        }
+
+        /* Solution modal styles */
+        .solution-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-button:hover {
+            color: #333;
+        }
+
+        #modalBody {
+            padding: 20px;
+        }
+
+        /* Footer Styles */
+        .footer {
+            margin-top: 60px;
+            background: #f9f9f9;
+            color: #333;
+            padding: 40px 0 20px 0;
+            width: 100vw;
+            position: relative;
+            left: 0;
+            box-sizing: border-box;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0 50px;
+            width: 100%;
+            margin: auto;
+            max-width: 1200px;
+        }
+
+        .footer-left {
+            max-width: 40%;
+        }
+
+        .footer-left h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .footer-left span {
+            font-weight: bold;
+        }
+
+        .footer-left p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 50px;
+        }
+
+        .footer-section h3 {
+            font-size: 23px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 5px;
+        }
+
+        .footer-section ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            font-size: 14px;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with navigation -->
+    <header class="p-3 text-bg-light">
+        <div class="container-fluid">
+            <div class="d-flex flex-wrap align-items-center justify-content-between">
+                <a class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none" style="margin-right: 90px;">
+                    <img src="images/VJ_logo.png" alt="Company logo" width="190" height="85">
+                </a>
+
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0" style="font-size: 19px;">
+                    <li><a href="Homepage.html" class="nav-link px-2 text-black">HOME</a></li>
+                    <li><a href="Solutions.html" class="nav-link px-2 text-black active">SOLUTIONS</a></li>
+                    <li><a href="AboutUs.html" class="nav-link px-2 text-black">ABOUT US</a></li>
+                    <li><a href="ContactUs.html" class="nav-link px-2 text-black">CONTACT US</a></li>
+                    <li><a href="#" class="nav-link px-2 text-black">REVIEW FEATURES</a></li>
+                </ul>
+
+                <div class="d-flex align-items-center text-end">
+                    <!-- User account section - shown when logged in -->
+                    <div id="user-account-section" style="display: none;">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span id="user-name">User</span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="/userProfile.html">My Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Login/Signup buttons - shown when not logged in -->
+                    <div id="auth-buttons">
+                        <button type="button" class="btn btn-outline-dark me-2" onclick="window.location.href='login.html'">Login</button>
+                        <button type="button" class="btn btn-warning" onclick="window.location.href='index.html'">Sign-up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Solutions Section -->
+    <section class="solutions-container">
+        <div class="container">
+            <h1 class="page-title">Our Solutions</h1>
+            <div id="loadingIndicator" class="text-center my-5">
+                <div class="spinner-border text-warning" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading solutions...</p>
+            </div>
+            <div id="solutionsContainer" class="row">
+                <!-- Solutions will be loaded here dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Details Modal -->
+    <div id="solutionModal" class="solution-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Solution Details</div>
+                <button class="close-button" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody">
+                <!-- Solution details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img src="images/VJ_logo.png" alt="Brand-logo" style="width: 260px; height: 140px;">
+                <p>We will always attempt to answer your questions thoroughly, so that you never have to worry needlessly, and we will explain complicated things clearly and simply.</p>
+            </div>
+            <div class="footer-right">
+                <div class="footer-section">
+                    <h3>COMPANY</h3>
+                    <ul>
+                        <li><a href="Homepage.html">Home</a></li>
+                        <li><a href="AboutUs.html">About us</a></li>
+                        <li><a href="#">Delivery</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>GET IN TOUCH</h3>
+                    <p>1: 08041012348 (Ext 7639)</p>
+                    <p>2: +91-8208368596</p>
+                    <p>Mail: vjautomation@gmail.com</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Copyright 2025 © VJ Automation and Solutions.com - All Right Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Load solutions
+            loadSolutions();
+            
+            // Initialize nav link active state
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    // Remove the 'active' class from all links
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    
+                    // Add 'active' class to the clicked link
+                    this.classList.add('active');
+                });
+            });
+        });
+        
+        async function loadSolutions() {
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const solutionsContainer = document.getElementById('solutionsContainer');
+            
+            try {
+                // Get solutions from API
+                const solutions = await getPublicSolutions();
+                
+                // Hide loading indicator
+                loadingIndicator.style.display = "none";
+                
+                // Display solutions
+                if (solutions && solutions.length > 0) {
+                    solutionsContainer.innerHTML = '';
+                    
+                    solutions.forEach(solution => {
+                        // Format created date
+                        const createdDate = new Date(solution.createdAt || solution.updatedAt || Date.now()).toLocaleDateString();
+                        
+                        // Create solution card
+                        const solutionCard = document.createElement('div');
+                        solutionCard.className = 'col-lg-6 col-md-12 mb-4';
+                        solutionCard.innerHTML = `
+                            <div class="solution-card">
+                                <h2 class="solution-title">${solution.title || 'Untitled Solution'}</h2>
+                                <p class="solution-text">${solution.solutionText.substring(0, 200)}${solution.solutionText.length > 200 ? '...' : ''}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <button class="btn view-details-btn" onclick="viewSolutionDetails('${solution._id}')">View Details</button>
+                                    <div class="solution-date">Added: ${createdDate}</div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        solutionsContainer.appendChild(solutionCard);
+                    });
+                } else {
+                    solutionsContainer.innerHTML = '<div class="col-12"><div class="no-solutions">No solutions available at this time. Please check back later.</div></div>';
+                }
+            } catch (error) {
+                console.error('Error loading solutions:', error);
+                loadingIndicator.style.display = "none";
+                solutionsContainer.innerHTML = `
+                    <div class="col-12">
+                        <div class="no-solutions">
+                            <p>Error loading solutions. Please try again later.</p>
+                            <p class="text-muted small">${error.message}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        async function viewSolutionDetails(solutionId) {
+            const modal = document.getElementById('solutionModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            try {
+                modalBody.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-warning" role="status"></div><p class="mt-3">Loading solution details...</p></div>';
+                modal.style.display = 'flex';
+                
+                // Get solutions and find the one with matching ID
+                const solutions = await getPublicSolutions();
+                const solution = solutions.find(s => s._id === solutionId);
+                
+                if (solution) {
+                    modalTitle.textContent = solution.title || 'Solution Details';
+                    
+                    // Format created date
+                    const createdDate = new Date(solution.createdAt || solution.updatedAt || Date.now()).toLocaleDateString();
+                    
+                    modalBody.innerHTML = `
+                        <div class="solution-detail-content">
+                            <div class="mb-4">
+                                <h3 class="mb-3">Description</h3>
+                                <p>${solution.solutionText.replace(/\n/g, '<br>')}</p>
+                            </div>
+                            ${solution.implementation ? `
+                            <div class="mb-4">
+                                <h3 class="mb-3">Implementation Details</h3>
+                                <p>${solution.implementation.replace(/\n/g, '<br>')}</p>
+                            </div>
+                            ` : ''}
+                            <div class="text-end text-muted">
+                                <small>Added: ${createdDate}</small>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    modalBody.innerHTML = '<div class="p-4 text-center">Solution not found</div>';
+                }
+            } catch (error) {
+                console.error('Error fetching solution details:', error);
+                modalBody.innerHTML = `<div class="p-4 text-center">Error: ${error.message}</div>`;
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('solutionModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('solutionModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html> 

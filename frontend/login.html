@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <img src="/images/VJ_logo.png" alt="Logo" class="logo">
+    <div class="main-container">
+        <h1 class="welcome-text">WELCOME</h1>
+        <div class="login-box">
+            <div class="left-section">
+                <h2>LOGIN NOW</h2>
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <label for="email">Email</label>
+                    <div class="input-container">
+                        <span class="icon">&#128231;</span>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <label for="password">Password</label>
+                    <div class="input-container">
+                        <span class="icon">&#128274;</span>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="login-btn">LOGIN</button>
+                    <a href="/homepage.html" class="admin-link"></a>
+                </form>
+            </div>
+
+            <div class="right-section">
+                <p>Or login with</p>
+                <button class="social-btn google-btn" onclick="handleGoogleLogin()">
+                    <img src="/images/google-icon.png" width="20"> Google Account
+                </button>
+                <button class="social-btn github-btn" onclick="handleGithubLogin()">
+                    <img src="/images/github-icon.png" width="20"> GitHub Account
+                </button>
+                <p class="signup-text">Not a member? <a href="/"><u>Signup</u></a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            await login(email, password);
+        }
+
+        function handleGoogleLogin() {
+            // Implement Google OAuth login
+            alert('Google login will be implemented soon');
+        }
+
+        function handleGithubLogin() {
+            // Implement GitHub OAuth login
+            alert('GitHub login will be implemented soon');
+        }
+    </script>
+</body>
+</html>

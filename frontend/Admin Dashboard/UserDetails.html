@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #d9d9d9;
+            padding: 10px 40px;
+        }
+        .logo {
+            height: 100px;
+            width: auto;
+        }
+        .buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .admin-name {
+            font-size: 23px;
+            font-weight: bold;
+            background-color: #ffffff;
+            padding: 5px 7px;
+            border-radius: 5px;
+        }
+        .logout-btn {
+            background-color: #333;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 23px;
+        }
+        .logout-btn:hover {
+            background: #d64040;
+        }
+        .container {
+            display: flex;
+            flex-grow: 1;
+            height: calc(100vh - 120px);
+            align-items: stretch;
+        }
+        .sidebar {
+            padding: 0 20px;
+            width: 220px;
+            background-color: #e6e6e6;
+            border-right: 2px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100%;
+        }
+        .menu-item {
+            margin-bottom: 10px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            width: 90%;
+            padding: 13px;
+            background: #555;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 25px;
+            text-align: left;
+        }
+        .menu-item:hover {
+            background: #777;
+        }
+        .active {
+            background: rgb(21, 21, 21) !important;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: auto;
+            margin: 20px;
+        }
+        
+        #searchInput {
+            font-size: 18px;
+            padding: 10px;
+            width: 100%; /* Full width matching table */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        .toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .circle {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .toggle-btn.disabled {
+            pointer-events: none;
+            opacity: 0.5; /* Makes it look disabled */
+        }
+        .error-message {
+            color: #d64040;
+            background-color: #ffeeee;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #d64040;
+            font-weight: bold;
+            display: none;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+            
+                
+   
+</head>
+<body>
+    <div class="navbar">
+        <img src="VJ_logo-removebg-preview.png" alt="Logo" class="logo">
+        <div class="buttons">
+            <span class="admin-name" id="adminName">Admin</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <div class="menu-item" style="margin-top: 70px;" onclick="window.location.href='/admin/dashboard'">🏠 Dashboard</div>
+            <div class="menu-item active" onclick="window.location.href='/admin/userdetails'">📅 User Details</div>
+            <div class="menu-item" onclick="window.location.href='/admin/addsolutions'">➕ Add Solutions</div>
+            <div class="menu-item">📋 List</div>
+            <div class="menu-item">📈 Ratings</div>
+        </div>
+        <div class="content">
+            <div id="errorMessage" class="error-message"></div>
+            <div id="loadingIndicator" class="loading">Loading user data...</div>
+            
+            <div id="userData" style="display: none;">
+                <div style="position: relative; width: 100%;">
+                    <span style="position: absolute; left: 5px; top: 32%; transform: translateY(-50%); font-size: 20px; color: rgb(187, 187, 187);">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Search by Name, Company, Email, Status..."
+                           style="width: 100%; font-size: 18px; padding: 10px 10px 10px 40px; height: 40px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+                
+                <table style="width: 100%; border-collapse: collapse; text-align: left; margin-top: 10px;">
+                    <thead>
+                        <tr style="background: #ccc;">
+                            <th style="padding: 10px; border-bottom: 2px solid #000;">Sr No</th>
+                            <th style="padding: 10px; border-bottom: 2px solid #000;">Name</th>
+                            <th style="padding: 10px; border-bottom: 2px solid #000;">Company</th>
+                            <th style="padding: 10px; border-bottom: 2px solid #000;">Email</th>
+                            <th style="padding: 10px; border-bottom: 2px solid #000;">Contact</th>
+                            <th style="padding: 10px; border-bottom: 2px solid #000;">Location</th>
+                            <th style="padding: 10px; border-bottom: 2px solid #000;">Registered</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable">
+                        <!-- Data will be added dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        // Check if user is authenticated as admin
+        document.addEventListener("DOMContentLoaded", function() {
+            if (!checkAdminAuth()) {
+                return;
+            }
+            
+            // Display admin name
+            try {
+                const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{"name":"Admin"}');
+                document.getElementById('adminName').textContent = adminUser.name || 'Admin';
+            } catch (e) {
+                console.error('Error parsing admin user data:', e);
+                document.getElementById('adminName').textContent = 'Admin';
+            }
+            
+            // Load users from backend
+            loadUsers();
+            
+            // Set up search functionality
+            document.getElementById('searchInput').addEventListener('keyup', function () {
+                let filter = this.value.toLowerCase();
+                let rows = document.querySelectorAll('#dataTable tr');
+        
+                rows.forEach(row => {
+                    let text = row.innerText.toLowerCase();
+                    row.style.display = text.includes(filter) ? '' : 'none';
+                });
+            });
+            
+            // Function to retry loading data
+            window.retryLoading = function() {
+                document.getElementById('errorMessage').style.display = "none";
+                document.getElementById('loadingIndicator').style.display = "block";
+                document.getElementById('userData').style.display = "none";
+                loadUsers();
+            };
+        });
+    
+        // Function to load users from backend
+        async function loadUsers() {
+            const errorMessage = document.getElementById('errorMessage');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const userData = document.getElementById('userData');
+            
+            try {
+                // Get all users from backend
+                const users = await getAdminAllUsers();
+                
+                // Hide loading indicator and show data
+                loadingIndicator.style.display = "none";
+                userData.style.display = "block";
+                
+                // Get problems to associate users with problems
+                const problems = await getAdminAllProblems();
+                
+                // Map users to table
+                const table = document.getElementById("dataTable");
+                table.innerHTML = "";
+                
+                let userCount = 0;
+                
+                users.forEach((user, index) => {
+                    // Skip admin users
+                    if (user.role === 'admin') return;
+                    
+                    userCount++;
+                    
+                    // Format date
+                    const date = new Date(user.createdAt);
+                    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+                    
+                    // Create row
+                    const row = table.insertRow();
+                    row.innerHTML = `
+                        <td style="padding: 10px; border-bottom: 1px solid #ccc;">${userCount}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ccc;">${user.name || 'N/A'}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ccc;">${user.company || 'N/A'}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ccc;">${user.email || 'N/A'}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ccc;">${user.phone || 'N/A'}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ccc;">${user.location || user.address || 'N/A'}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ccc;">${formattedDate}</td>
+                    `;
+                });
+                
+                if (userCount === 0) {
+                    table.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px;">No users found.</td></tr>`;
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+                
+                // Hide loading indicator and show error message
+                loadingIndicator.style.display = "none";
+                errorMessage.style.display = "block";
+                
+                if (error.message === 'Session expired') {
+                    errorMessage.innerHTML = "Your session has expired. Please <a href='/admin/login'>login again</a>.";
+                } else {
+                    errorMessage.innerHTML = `Failed to load user data: ${error.message}. <a href="javascript:void(0)" onclick="retryLoading()">Retry</a>`;
+                }
+            }
+        }
+    </script>
+    
+    
+</body>
+</html>

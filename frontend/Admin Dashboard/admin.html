@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+
+        /* *{
+            outline: 2px solid red;
+        } */
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #d9d9d9;
+            padding: 10px 40px;
+        }
+        .logo {
+            height: 100px;
+            width: auto;
+        }
+        .buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .admin-name {
+            font-size: 23px;
+            font-weight: bold;
+            background-color: #ffffff;
+            padding: 5px 7px;
+            border-radius: 5px;
+        }
+        .logout-btn {
+            background-color: #333;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 23px;
+        }
+        .logout-btn:hover{
+            background: #d64040;
+        }
+        .container {
+            display: flex;
+            flex-grow: 1;
+        }
+        .sidebar {
+            width: 260px;
+            background-color: #e6e6e6;
+            padding: 20px;
+            border-right: 2px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .menu-item {
+            margin-bottom: 15px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 13px;
+            background: #555;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 28px;
+            text-align: left;
+        }
+        .menu-item:hover {
+            background: #777;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+            background: linear-gradient(to right, #ccc, #f5f5f5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                padding: 10px;
+            }
+            .menu-item {
+                flex: 1 1 45%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <img src="VJ_logo-removebg-preview.png" alt="Logo" class="logo">
+        <div class="buttons">
+            <span class="admin-name">Admin</span>
+            <button class="logout-btn">Logout</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <div class="menu-item" onclick="window.location.href='Dashboard.html'">🏠 Dashboard</div>
+            <div class="menu-item" onclick="window.location.href='UserDetails.html'">📅 User Details</div>
+            <div class="menu-item" onclick="window.location.href='Addsolutions.html'">➕ Add Solutions</div>
+            <div class="menu-item">📋 List</div>
+            <div class="menu-item">📊 Ratings</div>
+        </div>
+        
+</div>
+</body>
+</html>

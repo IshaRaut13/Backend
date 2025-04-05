@@ -1,0 +1,40 @@
+<!-- Common header to be included in all pages -->
+<header class="p-3 text-bg-light">
+  <div class="container-fluid">
+    <div class="d-flex flex-wrap align-items-center justify-content-between">
+      <a class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none" style="margin-right: 90px;">
+          <img src="images/VJ_logo.png" alt="Company logo" width="190" height="85">
+      </a>
+
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0" style="font-size: 19px;">
+        <li><a href="Homepage.html" class="nav-link px-2 text-black">HOME</a></li>
+        <li><a href="Solutions.html" class="nav-link px-2 text-black">SOLUTIONS</a></li>
+        <li><a href="AboutUs.html" class="nav-link px-2 text-black">ABOUT US</a></li>
+        <li><a href="ContactUs.html" class="nav-link px-2 text-black">CONTACT US</a></li>
+        <li><a href="#" class="nav-link px-2 text-black">REVIEW FEATURES</a></li>
+      </ul>
+
+      <div class=" d-flex align-items-center text-end">
+        <!-- User account section - shown when logged in -->
+        <div id="user-account-section" style="display: none;">
+          <div class="dropdown">
+            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <span id="user-name">User</span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="/userProfile.html">My Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Login/Signup buttons - shown when not logged in -->
+        <div id="auth-buttons">
+          <button type="button" class="btn btn-outline-dark me-2" onclick="window.location.href='login.html'">Login</button>
+          <button type="button" class="btn btn-warning" onclick="window.location.href='index.html'">Sign-up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header> 

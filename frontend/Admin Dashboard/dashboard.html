@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #d9d9d9;
+            padding:10px 40px;
+        }
+        .logo {
+            height: 100px;
+            width: auto;
+        }
+        .buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .admin-name {
+            font-size: 23px;
+            font-weight: bold;
+            background-color: #ffffff;
+            padding: 5px 7px;
+            border-radius: 5px;
+        }
+        .logout-btn {
+            background-color: #333;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 23px;
+        }
+        .logout-btn:hover{
+            background: #d64040;
+        }
+        .container {
+            display: flex;
+            flex-grow: 1;
+            height: calc(100vh - 120px);
+            align-items: stretch;
+        }
+        .sidebar {
+            padding: 0 20px;
+            width: 220px;
+            background-color: #e6e6e6;
+            border-right: 2px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100%; 
+        }
+        .menu-item {
+            margin-bottom: 10px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            width: 90%;
+            padding: 13px;
+            background: #555;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 25px;
+            text-align: left;
+        }
+        .menu-item:hover {
+            background: #777;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: auto;
+            margin: 20px;
+        }
+        .error-message {
+            color: #d64040;
+            background-color: #ffeeee;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #d64040;
+            font-weight: bold;
+            display: none;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <img src="VJ_logo-removebg-preview.png" alt="Logo" class="logo">
+        <div class="buttons">
+            <span class="admin-name" id="adminName">Admin</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <div class="menu-item" style="margin-top: 70px;" id="dashboardBtn" onclick="window.location.href='/admin/dashboard'">🏠 Dashboard</div>
+            <div class="menu-item" onclick="window.location.href='/admin/userdetails'">📅 User Details</div>
+            <div class="menu-item" onclick="window.location.href='/admin/addsolutions'">➕ Add Solutions</div>
+            <div class="menu-item">📋 List</div>
+            <div class="menu-item">📈 Ratings</div>
+        </div>
+        <div class="content" id="dashboardContent" style="display: none;">
+            <div id="errorMessage" class="error-message"></div>
+            <div id="loadingIndicator" class="loading">Loading dashboard data...</div>
+            
+            <div id="dashboardData" style="display: none;">
+                <div style="display: flex; justify-content: space-around; text-align: center; margin-bottom: 20px;">
+                    <div style="background: #e6e6e6; padding: 6px; border-radius: 20px; width: 30%;">
+                        <h1>✔️ Completed</h1>
+                        <h2 id="completedCount">0</h2>
+                    </div>
+                    <div style="background: #e6e6e6; padding: 6px; border-radius: 20px; width: 30%;">
+                        <h1>⌛ Pending</h1>
+                        <h2 id="pendingCount">0</h2>
+                    </div>
+                    <div style="background: #e6e6e6; padding: 6px; border-radius: 20px; width: 30%;">
+                        <h1>📊 Total</h1>
+                        <h2 id="totalCount">0</h2>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <h2>Status</h2>
+                    <div style="position: relative; width: 500px;">
+                        <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 18px; color: grey;">🔍</span>
+                        <input type="text" id="searchInput" placeholder="Search by Name, Date, Status, etc."
+                               style="font-size: 18px; padding: 10px 10px 10px 40px; width: 89%; height: 25px; border: 1px solid #ccc; border-radius: 5px;">
+                    </div>
+                </div>
+                
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="background: #ccc;">
+                            <th style="padding: 10px; border-bottom: 2px solid #000;">Sr No</th>
+                            <th style="padding: 10px; border-bottom: 2px solid #000;">Name</th>
+                            <th style="padding: 10px; border-bottom: 2px solid #000;">Date</th>
+                            <th style="padding: 10px; border-bottom: 2px solid #000;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable">
+                        <!-- Entries will be added dynamically here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Check if user is authenticated as admin
+            if (!checkAdminAuth()) {
+                return;
+            }
+
+            // Display admin name
+            try {
+                const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{"name":"Admin"}');
+                document.getElementById('adminName').textContent = adminUser.name || 'Admin';
+            } catch (e) {
+                console.error('Error parsing admin user data:', e);
+                document.getElementById('adminName').textContent = 'Admin';
+            }
+
+            const dashboardContent = document.getElementById("dashboardContent");
+            const dashboardBtn = document.getElementById("dashboardBtn");
+            const menuItems = document.querySelectorAll(".menu-item");
+            const errorMessage = document.getElementById("errorMessage");
+            const loadingIndicator = document.getElementById("loadingIndicator");
+            const dashboardData = document.getElementById("dashboardData");
+        
+            // Show dashboard content by default
+            dashboardContent.style.display = "block";
+            dashboardBtn.style.background = "RGB(21, 21, 21)"; // Highlight active menu
+        
+            menuItems.forEach(item => {
+                item.addEventListener("click", function () {
+                    menuItems.forEach(menu => menu.style.background = "#555");
+        
+                    if (this.innerText.includes("Dashboard")) {
+                        dashboardContent.style.display = "block";
+                        this.style.background = "RGB(21, 21, 21)";
+                    } else {
+                        dashboardContent.style.display = "none";
+                    }
+                });
+            });
+        
+            // Load problems from backend
+            loadProblems();
+
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('keyup', function () {
+                let filter = this.value.toLowerCase();
+                let rows = document.querySelectorAll('#dataTable tr'); 
+                
+                rows.forEach(row => {
+                    let text = row.innerText.toLowerCase();
+                    row.style.display = text.includes(filter) ? '' : 'none';
+                });
+            });
+            
+            // Function to retry loading data
+            window.retryLoading = function() {
+                errorMessage.style.display = "none";
+                loadingIndicator.style.display = "block";
+                dashboardData.style.display = "none";
+                loadProblems();
+            };
+        });
+        
+        // Function to load problems from backend
+        async function loadProblems() {
+            const errorMessage = document.getElementById("errorMessage");
+            const loadingIndicator = document.getElementById("loadingIndicator");
+            const dashboardData = document.getElementById("dashboardData");
+            
+            try {
+                // Get all problems
+                const problems = await getAdminAllProblems();
+                
+                // Hide loading indicator and show data
+                loadingIndicator.style.display = "none";
+                dashboardData.style.display = "block";
+                
+                // Count by status
+                let completed = 0;
+                let pending = 0;
+                
+                // Update table
+                const tableBody = document.getElementById('dataTable');
+                tableBody.innerHTML = '';
+                
+                problems.forEach((problem, index) => {
+                    // Count by status
+                    if (problem.status === 'Completed' || problem.status === 'Complete') {
+                        completed++;
+                    } else if (problem.status === 'Pending') {
+                        pending++;
+                    }
+                    
+                    // Format date
+                    const date = new Date(problem.createdAt);
+                    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+                    
+                    // Create table row
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="padding: 10px; border-bottom: 1px solid #ccc;">${index + 1}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ccc;">${problem.name}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ccc;">${formattedDate}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ccc;">
+                            <span style="color: ${getStatusColor(problem.status)};">${problem.status}</span>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+                
+                // Update counters
+                document.getElementById('completedCount').textContent = completed;
+                document.getElementById('pendingCount').textContent = pending;
+                document.getElementById('totalCount').textContent = problems.length;
+                
+            } catch (error) {
+                console.error('Error loading problems:', error);
+                
+                // Hide loading indicator and show error message
+                loadingIndicator.style.display = "none";
+                errorMessage.style.display = "block";
+                
+                if (error.message === 'Session expired') {
+                    errorMessage.innerHTML = "Your session has expired. Please <a href='/admin/login'>login again</a>.";
+                } else {
+                    errorMessage.innerHTML = `Failed to load dashboard data: ${error.message}. <a href="javascript:void(0)" onclick="retryLoading()">Retry</a>`;
+                }
+            }
+        }
+        
+        // Helper function to get status color
+        function getStatusColor(status) {
+            switch(status) {
+                case 'Completed':
+                case 'Complete':
+                    return 'green';
+                case 'Pending':
+                    return 'orange';
+                case 'Cancel':
+                case 'Cancelled':
+                    return 'red';
+                default:
+                    return 'black';
+            }
+        }
+    </script>
+</body>
+
+</html>

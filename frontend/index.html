@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+         background: url('user login page bg2.jpg') no-repeat center center fixed;
+         background-size: cover;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         height: 100vh;
+         margin: 0;
+         font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 45px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 500px;
+            border: 2px solid rgb(0, 0, 0);
+        }
+        .container-bigcontainer{
+            width: 552px;
+            background: rgb(224, 224, 224);
+            padding: 50px;
+            border-radius: 55px;
+            text-align: center;
+            border: 2px solid rgb(224, 224, 224);
+        }
+        h1 {
+            margin-bottom: 15px;
+        }
+
+
+        .social-login { 
+            display: flex; 
+            justify-content: center; 
+            gap: 10px; 
+            width: 100%; 
+        } 
+
+        .social-login button { 
+            flex: 1; 
+            padding: 10px; 
+            gap:10px; 
+            border: none; 
+            cursor: pointer; 
+            border-radius: 50px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            white-space: nowrap; 
+        }
+
+        .google-btn {
+            background: #5c4140;
+            color: white;
+        }
+        .apple-btn {
+            background: #000;
+            color: white;
+        }
+        .input-box {
+            background-color: lightgray;
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            padding: 5px;
+            margin: 10px 0;
+        }
+        .icon {
+            margin: 5px;
+            font-size: 24px;
+    
+        }
+        input {
+            border: none;
+            background-color: lightgray;
+            outline: none;
+            width: 100%;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+            text-align: left;
+            font-size: 22px;
+        }
+
+        .submit-btn {
+            width: 50%;
+            padding: 10px;
+            background: #3b3e42;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 30px auto 0;
+        }
+        .login-link {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <img src="/images/VJ_logo.png" alt="Logo" class="logo">
+    <div class="container-bigcontainer">
+    <div class="container">
+        <h1>Create an account</h1>
+        <div class="social-login">
+            <button class="social-btn google-btn" onclick="handleGoogleSignup()">
+                <img src="/images/google-icon.png" width="20"> Google Account
+            </button>
+            <button class="social-btn github-btn" onclick="handleGithubSignup()">
+                <img src="" width="20"> GitHub Account
+            </button>
+        </div>
+        <p>Or</p>
+        <form id="signupForm" onsubmit="handleSignup(event)">
+            <label for="name">Full Name</label>
+            <div class="input-box">
+                <span class="icon">&#128100;</span>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+            </div>
+
+            <label for="email">Email</label>
+            <div class="input-box">
+                <span class="icon">&#128231;</span>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            
+            <label for="password">Password</label>
+            <div class="input-box">
+                <span class="icon">&#128274;</span>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            
+            <button type="submit" class="submit-btn">Create account</button>
+        </form>
+        <p class="login-link">Already have an account? <a href="login.html">Login</a></p>
+    </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+    async function handleSignup(event) {
+        event.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        // Create user data object
+        const userData = {
+            name,
+            email,
+            password
+        };
+        
+        // Call the register function from api.js
+        await register(userData);
+    }
+
+    function handleGoogleSignup() {
+        // This would be implemented with Google OAuth
+        alert('Google signup will be implemented soon');
+    }
+
+    function handleGithubSignup() {
+        // This would be implemented with GitHub OAuth
+        alert('Github signup will be implemented soon');
+    }
+</script>
+</body>
+</html>

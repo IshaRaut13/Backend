@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions List</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #d9d9d9;
+            padding: 10px 40px;
+        }
+        .logo {
+            height: 100px;
+            width: auto;
+        }
+        .buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .admin-name {
+            font-size: 23px;
+            font-weight: bold;
+            background-color: #ffffff;
+            padding: 5px 7px;
+            border-radius: 5px;
+        }
+        .logout-btn {
+            background-color: #333;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 23px;
+        }
+        .logout-btn:hover{
+            background: #d64040;
+        }
+        .container {
+            display: flex;
+            flex-grow: 1;
+        }
+        .sidebar {
+            width: 260px;
+            background-color: #e6e6e6;
+            padding: 20px;
+            border-right: 2px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .menu-item {
+            margin-bottom: 15px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 13px;
+            background: #555;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 28px;
+            text-align: left;
+        }
+        .menu-item:hover {
+            background: #777;
+        }
+        .active {
+            background: rgb(21, 21, 21) !important;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: auto;
+            margin: 20px;
+        }
+        .error-message {
+            color: #d64040;
+            background-color: #ffeeee;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #d64040;
+            font-weight: bold;
+            display: none;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+        .solution-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .solution-table th {
+            background-color: #f2f2f2;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+            font-size: 16px;
+        }
+        .solution-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            font-size: 15px;
+        }
+        .solution-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .action-button {
+            background: #555;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .action-button:hover {
+            background: #333;
+        }
+        .search-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .search-input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 300px;
+            outline: none;
+        }
+        .solution-details-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 60%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .menu-item.active {
+            background-color: #1c1c1c; /* Matte black */
+            color: white;
+        }
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            color: #333333;
+            padding: 30px 40px;
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+            width: 450px;
+            max-width: 90%;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        .toast.hidden {
+            display: none;
+        }
+        
+        .toast .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s ease;
+        }
+        
+        .toast .close:hover {
+            color: #333;
+        }
+        
+        .toast-content h3 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #222;
+        }
+        
+        .toast-content p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .toast-content p span {
+            font-weight: normal;
+            color: #444;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(3px);
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <img src="VJ_logo-removebg-preview.png" alt="Logo" class="logo">
+        <div class="buttons">
+            <span class="admin-name" id="adminName">Admin</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <div class="menu-item" style="margin-top: 70px;" onclick="window.location.href='/admin/dashboard'">🏠 Dashboard</div>
+            <div class="menu-item" onclick="window.location.href='/admin/userdetails'">📅 User Details</div>
+            <div class="menu-item" onclick="window.location.href='/admin/addsolutions'">➕ Add Solutions</div>
+            <div class="menu-item active" onclick="window.location.href='/admin/solutionlist'">📋 List</div>
+            <div class="menu-item">📊 Ratings</div>
+        </div>
+        <div class="content">
+            <h1>Solutions List</h1>
+            <div id="errorMessage" class="error-message"></div>
+            <div id="loadingIndicator" class="loading">Loading solutions...</div>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search solutions..." class="search-input">
+            </div>
+            
+            <table class="solution-table" id="solutionsTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Created Date</th>
+                        <th>Actions</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody id="solutionsTableBody">
+                    <!-- Solutions will be loaded here dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Solution Details Modal -->
+    <div id="solutionModal" class="solution-details-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Solution Details</div>
+                <button class="close-button" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody">
+                <!-- Solution details will be populated here -->
+            </div>
+        </div>
+    </div>
+    <!-- Toast Popup -->
+    <div id="toast-overlay" class="overlay hidden">
+        <div id="toast" class="toast">
+        <div class="toast-content">
+            <span id="toast-close" class="close">&times;</span>
+            <h3 id="toast-title">Solution Name</h3>
+            <p><strong>Description:</strong> <span id="toast-desc"></span></p>
+            <p><strong>Details:</strong> <span id="toast-details"></span></p>
+        </div>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Check admin authentication
+            if (!checkAdminAuth()) {
+                return;
+            }
+            
+            // Display admin name
+            try {
+                const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{"name":"Admin"}');
+                document.getElementById('adminName').textContent = adminUser.name || 'Admin';
+            } catch (e) {
+                console.error('Error parsing admin user data:', e);
+                document.getElementById('adminName').textContent = 'Admin';
+            }
+            
+            // Load solutions
+            loadSolutions();
+            
+            // Add search functionality
+            document.getElementById('searchInput').addEventListener('input', function() {
+                filterSolutions(this.value);
+            });
+        });
+        
+        async function loadSolutions() {
+            const errorMessage = document.getElementById('errorMessage');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const solutionsTableBody = document.getElementById('solutionsTableBody');
+            
+            try {
+                errorMessage.style.display = "none";
+                loadingIndicator.style.display = "block";
+                
+                // Get solutions from API
+                const solutions = await getAdminAllSolutions();
+                
+                // Hide loading indicator
+                loadingIndicator.style.display = "none";
+                
+                // Display solutions
+                if (solutions && solutions.length > 0) {
+                    solutionsTableBody.innerHTML = '';
+                    
+                    solutions.forEach(solution => {
+                        const row = document.createElement('tr');
+                        row.setAttribute('data-solution-id', solution._id);
+                        
+                        // Format created date
+                        const createdDate = new Date(solution.createdAt || solution.updatedAt || Date.now()).toLocaleDateString();
+                        
+                        row.innerHTML = `
+                            <td>${solution.title || 'Untitled Solution'}</td>
+                            <td>${solution.solutionText.substring(0, 100)}${solution.solutionText.length > 100 ? '...' : ''}</td>
+                            <td>${createdDate}</td>
+                            <td>
+                                <button class="action-button" onclick="viewSolutionDetails('${solution._id}')">View Details</button>
+                            </td>
+                            <td>
+                                <button class="action-button" style="background-color: #d64040;" onclick="deleteSolutionItem('${solution._id}')">Remove</button>
+                            </td>
+                        `;
+                        
+                        solutionsTableBody.appendChild(row);
+                    });
+                } else {
+                    solutionsTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No solutions found</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading solutions:', error);
+                loadingIndicator.style.display = "none";
+                errorMessage.style.display = "block";
+                errorMessage.textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        function filterSolutions(searchTerm) {
+            const rows = document.querySelectorAll('#solutionsTable tbody tr');
+            searchTerm = searchTerm.toLowerCase();
+            
+            rows.forEach(row => {
+                const title = row.cells[0].textContent.toLowerCase();
+                const description = row.cells[1].textContent.toLowerCase();
+                const date = row.cells[2].textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm) || date.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        
+        async function viewSolutionDetails(solutionId) {
+            const modal = document.getElementById('solutionModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            try {
+                modalBody.innerHTML = 'Loading solution details...';
+                modal.style.display = 'flex';
+                
+                // Get solution details - you'll need to implement this API function
+                const solutions = await getAdminAllSolutions();
+                const solution = solutions.find(s => s._id === solutionId);
+                
+                if (solution) {
+                    modalTitle.textContent = solution.title || 'Solution Details';
+                    
+                    // Format created date
+                    const createdDate = new Date(solution.createdAt || solution.updatedAt || Date.now()).toLocaleDateString();
+                    
+                    modalBody.innerHTML = `
+                        <div style="margin-bottom: 20px;">
+                            <h3>Description</h3>
+                            <p>${solution.solutionText}</p>
+                        </div>
+                        ${solution.implementation ? `
+                        <div style="margin-bottom: 20px;">
+                            <h3>Implementation Details</h3>
+                            <p>${solution.implementation}</p>
+                        </div>
+                        ` : ''}
+                        <div style="margin-bottom: 20px;">
+                            <h3>Created</h3>
+                            <p>${createdDate}</p>
+                        </div>
+                    `;
+                } else {
+                    modalBody.innerHTML = '<p>Solution not found</p>';
+                }
+            } catch (error) {
+                console.error('Error fetching solution details:', error);
+                modalBody.innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+        
+        // Delete solution using API
+        async function deleteSolutionItem(solutionId) {
+            try {
+                if (confirm('Are you sure you want to delete this solution?')) {
+                    // Show loading indicator
+                    document.getElementById('loadingIndicator').style.display = 'block';
+                    
+                    // Call API to delete solution - calling the imported function directly
+                    const success = await deleteSolution(solutionId);
+                    
+                    if (success) {
+                        // Show toast notification
+                        document.getElementById('toast-title').textContent = 'Solution Deleted';
+                        document.getElementById('toast-desc').textContent = 'The solution has been successfully deleted.';
+                        document.getElementById('toast-details').textContent = '';
+                        document.getElementById('toast-overlay').classList.remove('hidden');
+                        document.getElementById('toast').classList.remove('hidden');
+                        
+                        // Hide toast after 3 seconds
+                        setTimeout(() => {
+                            document.getElementById('toast-overlay').classList.add('hidden');
+                            document.getElementById('toast').classList.add('hidden');
+                        }, 3000);
+                        
+                        // Reload solutions
+                        loadSolutions();
+                    }
+                }
+            } catch (error) {
+                console.error('Error deleting solution:', error);
+                alert(`Error deleting solution: ${error.message}`);
+            } finally {
+                // Hide loading indicator
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }
+        }
+        
+        // Close toast manually when clicking the X
+        document.getElementById('toast-close').addEventListener('click', function() {
+            document.getElementById('toast-overlay').classList.add('hidden');
+            document.getElementById('toast').classList.add('hidden');
+        });
+        
+        function closeModal() {
+            document.getElementById('solutionModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html> 
